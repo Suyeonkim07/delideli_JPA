@@ -39,7 +39,7 @@ public class ShopDTO {
 	private String operatingTime;
 	@Column(length = 255, nullable = false)
 	private String businessNum;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="owner_id", insertable = false, updatable = false)
 	private MemberDTO memberDTO;
 	@Column(name="owner_id")

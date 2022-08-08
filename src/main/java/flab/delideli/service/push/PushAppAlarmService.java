@@ -1,4 +1,4 @@
-package flab.delideli.service;
+package flab.delideli.service.push;
 
 import flab.delideli.dto.PushDTO;
 import org.springframework.stereotype.Service;

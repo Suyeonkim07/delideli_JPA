@@ -35,8 +35,8 @@ public class ShopController {
 	@GetMapping()
 	@ApiOperation(value = "사장님 ID로 가게 리스트 조회")
 	@UserAuthorization(role = UserLevel.OWNER)
-	public List<ShopMapping> getShopList(@RequestParam("ownerId") String ownerId) {
-		return shopService.findByOwnerId(ownerId);
+	public List<ShopMapping> getShopList(@RequestParam("ownerId") String ownerId, @CurrentUser String loginId) {
+		return shopService.findByOwnerId(ownerId, loginId);
 
 	}
 

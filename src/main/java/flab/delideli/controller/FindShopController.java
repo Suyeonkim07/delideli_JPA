@@ -1,10 +1,9 @@
 package flab.delideli.controller;
 
-import flab.delideli.dto.ShopDTO;
-import flab.delideli.dto.ShoplistDTO;
 import flab.delideli.service.FindShopService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import flab.delideli.dto.ShoplistDTO;
 
 import java.util.List;
 

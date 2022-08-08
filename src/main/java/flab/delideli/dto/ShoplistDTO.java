@@ -13,14 +13,14 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class ShoplistDTO {
 
-    @NotBlank
-    private String shopName;
-    @NotBlank
-    private String shopTel;
-    @NotBlank
-    private String shopLocation;
-    @NotBlank
-    private String deliveryArea;
-    @NotBlank
-    private int shopId;
+	@NotBlank
+	private String shopName;
+	@NotBlank
+	private String shopTel;
+	@NotBlank
+	private String shopLocation;
+	@NotBlank
+	private String deliveryArea;
+	@NotBlank
+	private int shopId;
 }

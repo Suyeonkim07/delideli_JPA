@@ -42,7 +42,9 @@ public class ShopService {
 		return shopRepository.findByShopIdAndMemberDTO_UserId(shopId, ownerId);
 	}
 
-	public List<ShopMapping> findByOwnerId(String ownerId) {
+	public List<ShopMapping> findByOwnerId(String ownerId, String loginId) {
+		if(!(loginId.equals(ownerId)))
+			throw new UnauthorizedException("권한이 없습니다.");
 		return shopRepository.findByMemberDTO_UserId(ownerId);
 	}
 

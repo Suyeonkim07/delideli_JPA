@@ -34,17 +34,17 @@ public class MenuService {
 		menuRepository.save(saveMenuDTO);
 	}
 
-	public void updateMenu(Long menuId,UpdateMenuDTO updateMenuDTO) {
-		MenuDTO menuDTO = menuRepository.findById(menuId).get();
+	public void updateMenu(Long menuId, UpdateMenuDTO updateMenuDTO, Long shopId) {
+		Optional<MenuDTO> menuDTO = menuRepository.findById(menuId);
 		validateExistMenu(menuDTO);
 		validateMainMenuPriceNotZero(menuDTO);
 		MenuDTO updateMenuDto = MenuDTO.builder()
 				.menuId(menuId)
-				.menuName(menuDTO.getMenuName())
+				.menuName(menuDTO.get().getMenuName())
 				.menuPrice(updateMenuDTO.getMenuPrice())
-				.shopDTO(menuDTO.getShopDTO())
+				.shopId(shopId)
 				.menuStock(updateMenuDTO.getMenuStock())
-				.mainMenu(menuDTO.isMainMenu())
+				.mainMenu(menuDTO.get().isMainMenu())
 				.menuActivation(updateMenuDTO.isMenuActivation())
 				.menuInfo(updateMenuDTO.getMenuInfo())
 				.menuCategory(updateMenuDTO.getMenuCategory())
@@ -56,14 +56,14 @@ public class MenuService {
 		menuRepository.deleteById(menuId);
 	}
 
-	private void validateExistMenu(MenuDTO menuDTO) {
-		if(menuDTO == null) {
+	private void validateExistMenu(Optional<MenuDTO> menuDTO) {
+		if(menuDTO.isEmpty()) {
 			throw new IllegalArgumentException("잘못된 입력입니다.");
 		}
 	}
 
-	private void validateMainMenuPriceNotZero(MenuDTO menuDTO) {
-		if(menuDTO.isMainMenu() == true && menuDTO.getMenuPrice() == 0) {
+	private void validateMainMenuPriceNotZero(Optional<MenuDTO> menuDTO) {
+		if(menuDTO.get().isMainMenu() == true && menuDTO.get().getMenuPrice() == 0) {
 			throw new IllegalStateException("메인메뉴는 0원이 될 수 없습니다.");
 		}
 	}

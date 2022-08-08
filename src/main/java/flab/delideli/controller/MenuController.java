@@ -52,7 +52,7 @@ public class MenuController {
 		@PathVariable long shopId, @PathVariable long menuId,@CurrentUser String ownerId) {
 
 		shopService.verifyShopOwner(shopId, ownerId);
-		menuService.updateMenu(menuId,updateMenuDTO);
+		menuService.updateMenu(menuId, updateMenuDTO, shopId);
 
 	}
 
