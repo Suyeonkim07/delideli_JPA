@@ -53,11 +53,7 @@ public class MenuService {
 	}
 
 	public void deleteMenu(Long menuId) {
-		try {
-			menuRepository.deleteById(menuId);
-		} catch (EmptyResultDataAccessException e) {
-			throw new MenuIdEmptyException("존재하지 않는 메뉴입니다.");
-		}
+		menuRepository.deleteById(menuId);
 	}
 
 	private void validateExistMenu(MenuDTO menuDTO) {
