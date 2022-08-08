@@ -2,9 +2,9 @@ package flab.delideli.controller;
 
 
 import flab.delideli.annotation.CurrentUser;
-import flab.delideli.dto.ShopDTO;
+import flab.delideli.entity.Shop;
 import flab.delideli.annotation.UserAuthorization;
-import flab.delideli.dto.ShopMapping;
+import flab.delideli.entity.ShopMapping;
 import flab.delideli.enums.UserLevel;
 import flab.delideli.service.ShopService;
 import io.swagger.annotations.Api;
@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,15 +27,15 @@ public class ShopController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "가게 등록")
 	@UserAuthorization(role = UserLevel.OWNER)
-	public void addShop(@CurrentUser String ownerId, @RequestBody ShopDTO shopDTO) {
+	public void addShop(@CurrentUser String ownerId, @RequestBody Shop shopDTO) {
 		shopService.addShop(ownerId, shopDTO);
 	}
 
 	@GetMapping()
 	@ApiOperation(value = "사장님 ID로 가게 리스트 조회")
 	@UserAuthorization(role = UserLevel.OWNER)
-	public List<ShopMapping> getShopList(@RequestParam("ownerId") String ownerId, @CurrentUser String loginId) {
-		return shopService.findByOwnerId(ownerId, loginId);
+	public List<ShopMapping> getShopList(@RequestParam("loginId") String loginId, @CurrentUser String ownerId) {
+		return shopService.findByOwnerId(loginId, ownerId);
 
 	}
 

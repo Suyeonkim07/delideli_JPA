@@ -60,7 +60,7 @@
         WHERE shop_id = #{shopId}
     </select>
 
-    <resultMap id="selectShop" type="flab.delideli.dto.ShopDTO">
+    <resultMap id="selectShop" type="flab.delideli.entity.Shop">
         <result column="shop_name" property="shopName"/>
         <result column="shop_tel" property="shopTel"/>
         <result column="shop_location" property="shopLocation"/>

@@ -1,4 +1,4 @@
-package flab.delideli.dto;
+package flab.delideli.entity;
 
 import flab.delideli.enums.FoodCategory;
 

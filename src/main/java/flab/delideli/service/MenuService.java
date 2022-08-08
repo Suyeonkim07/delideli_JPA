@@ -1,13 +1,14 @@
 package flab.delideli.service;
 
-import flab.delideli.dto.MenuDTO;
+import flab.delideli.entity.Menu;
 import flab.delideli.dto.UpdateMenuDTO;
 import flab.delideli.exception.AlreadyAddedValueException;
-import flab.delideli.exception.MenuIdEmptyException;
 import flab.delideli.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.Table;
 import java.util.Optional;
 
 @Service
@@ -16,12 +17,12 @@ public class MenuService {
 
 	private final MenuRepository menuRepository;
 
-	public void saveMenu(Long shopId, MenuDTO menuDTO) {
-		Optional<MenuDTO> menuDTOs = menuRepository.findByShopIdAndMenuName(shopId, menuDTO.getMenuName());
-		if (menuDTOs.isPresent()) {
+	public void saveMenu(Long shopId, Menu menuDTO) {
+		Optional<Menu> menus = menuRepository.findByShopIdAndMenuName(shopId, menuDTO.getMenuName());
+		if (menus.isPresent()) {
 			throw new AlreadyAddedValueException("해당 가게에 이미 등록한 메뉴입니다.");
 		}
-		MenuDTO saveMenuDTO = MenuDTO.builder()
+		Menu saveMenuDTO = Menu.builder()
 				.menuName(menuDTO.getMenuName())
 				.menuPrice(menuDTO.getMenuPrice())
 				.shopId(shopId)
@@ -34,36 +35,27 @@ public class MenuService {
 		menuRepository.save(saveMenuDTO);
 	}
 
+	@Transactional
 	public void updateMenu(Long menuId, UpdateMenuDTO updateMenuDTO, Long shopId) {
-		Optional<MenuDTO> menuDTO = menuRepository.findById(menuId);
-		validateExistMenu(menuDTO);
-		validateMainMenuPriceNotZero(menuDTO);
-		MenuDTO updateMenuDto = MenuDTO.builder()
-				.menuId(menuId)
-				.menuName(menuDTO.get().getMenuName())
-				.menuPrice(updateMenuDTO.getMenuPrice())
-				.shopId(shopId)
-				.menuStock(updateMenuDTO.getMenuStock())
-				.mainMenu(menuDTO.get().isMainMenu())
-				.menuActivation(updateMenuDTO.isMenuActivation())
-				.menuInfo(updateMenuDTO.getMenuInfo())
-				.menuCategory(updateMenuDTO.getMenuCategory())
-				.build();
-		menuRepository.save(updateMenuDto);
+		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
+			throw new IllegalArgumentException("변경할 메뉴가 없습니다.");
+		});
+		validateMainMenuPriceNotZero(menu, updateMenuDTO);
+		menu.setMenuPrice(updateMenuDTO.getMenuPrice());
+		menu.setMenuStock(updateMenuDTO.getMenuStock());
+		menu.setMenuInfo(updateMenuDTO.getMenuInfo());
+		menu.setMenuCategory(updateMenuDTO.getMenuCategory());
+		menu.setMenuActivation(updateMenuDTO.isMenuActivation());
+		menuRepository.save(menu);
 	}
 
+	@Transactional
 	public void deleteMenu(Long menuId) {
 		menuRepository.deleteById(menuId);
 	}
 
-	private void validateExistMenu(Optional<MenuDTO> menuDTO) {
-		if(menuDTO.isEmpty()) {
-			throw new IllegalArgumentException("잘못된 입력입니다.");
-		}
-	}
-
-	private void validateMainMenuPriceNotZero(Optional<MenuDTO> menuDTO) {
-		if(menuDTO.get().isMainMenu() == true && menuDTO.get().getMenuPrice() == 0) {
+	private void validateMainMenuPriceNotZero(Menu menu, UpdateMenuDTO updateMenuDTO) {
+		if (menu.isMainMenu() == true && updateMenuDTO.getMenuPrice() == 0) {
 			throw new IllegalStateException("메인메뉴는 0원이 될 수 없습니다.");
 		}
 	}

@@ -1,7 +1,7 @@
 package flab.delideli.service;
 
 import flab.delideli.dao.FindShopDao;
-import flab.delideli.dto.ShopDTO;
+import flab.delideli.entity.Shop;
 import flab.delideli.dto.ShoplistDTO;
 import flab.delideli.paging.PagingCriteria;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public class FindShops implements FindShopService {
     }
 
     @Override
-    public ShopDTO getShop(int shopid) {
+    public Shop getShop(int shopid) {
         return findShopDao.getShop(shopid);
     }
 }

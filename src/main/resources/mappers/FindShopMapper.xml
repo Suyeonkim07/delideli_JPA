@@ -30,7 +30,7 @@
         </if>
     </select>
 
-    <select id="getShop" resultType="flab.delideli.dto.ShopDTO">
+    <select id="getShop" resultType="flab.delideli.entity.Shop">
         SELECT *
         FROM shops
         WHERE shop_id = #{shop_id}
