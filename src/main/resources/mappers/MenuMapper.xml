@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="flab.delideli.dao.MenuDao" >
+
+  <insert id="insertMenu">
+    INSERT INTO menus (menu_name, menu_price, shop_id, menu_stock, main_menu, menu_activation, menu_info, menu_category)
+    VALUES (#{menuName}, #{menuPrice}, #{shopId}, #{menuStock}, #{mainMenu}, #{menuActivation}, #{menuInfo}, #{menuCategory})
+  </insert>
+
+  <select id="isExistMenuName" resultType="boolean">
+    SELECT IF(COUNT(*) > 0, 1, 0) FROM menus
+    WHERE menu_name = #{menuName} AND shop_id = #{shopId}
+  </select>
+
+  <select id="getMenuCount" parameterType="java.util.List" resultType="int">
+    SELECT count(*)
+    FROM menus
+    WHERE menu_id IN
+        <foreach collection="list" item="i"
+          open="(" close=")" separator=",">
+          #{i}
+        </foreach>
+  </select>
+
+  <select id="getMenuPriceList" parameterType="java.util.List" resultType="java.lang.Long">
+    SELECT menu_price
+    FROM menus
+    WHERE menu_id IN
+        <foreach collection="list" item="i"
+          open="(" close=")" separator=",">
+         #{i}
+        </foreach>
+  </select>
+
+  <update id = "updateMenu" >
+    UPDATE menus
+    <set>
+      <if test="updateMenuDTO.menuPrice != null">
+        menus.menu_price = #{updateMenuDTO.menuPrice},
+      </if>
+      <if test="updateMenuDTO.menuStock != null">
+        menus.menu_stock = #{updateMenuDTO.menuStock},
+      </if>
+      <if test="updateMenuDTO.menuInfo != null and updateMenuDTO.menuInfo != ''">
+        menus.menu_info = #{updateMenuDTO.menuInfo},
+      </if>
+      <choose>
+        <when test="updateMenuDTO.menuCategory != null">
+          menus.menu_category = #{updateMenuDTO.menuCategory},
+        </when>
+        <otherwise>
+          menus.menu_category = menus.menu_category,
+        </otherwise>
+      </choose>
+      <if test="updateMenuDTO.menuActivation != null">
+        menus.menu_activation = #{updateMenuDTO.menuActivation}
+      </if>
+    </set>
+    WHERE menu_id = #{updateMenuDTO.menuId}
+  </update>
+
+  <delete id="deleteMenu">
+    DELETE FROM menus
+    WHERE menu_id = #{menuId}
+  </delete>
+
+  <select id="isExistMenuId" resultType="boolean">
+    SELECT EXISTS (SELECT 1 FROM menus WHERE menu_id = #{menuId})
+  </select>
+
+  <select id="isMainMenu" resultType="_boolean">
+    SELECT main_menu
+    FROM menus
+    WHERE menu_id = #{menuId}
+  </select>
+</mapper>

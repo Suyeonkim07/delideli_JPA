@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="flab.delideli.dao.CartDao">
+    <insert id="insertCart">
+        INSERT INTO carts(user_id, menu_id, amount)
+        VALUES (#{userid}, #{addCartDTO.menuId}, #{addCartDTO.amount})
+    </insert>
+
+    <select id="isItemInCart" resultType="int">
+        SELECT menu_id
+        FROM carts
+        WHERE user_id = #{userId}
+           AND menu_id = #{addCartDTO.menuId}
+    </select>
+    
+    <update id="updateCartItem">
+        UPDATE carts
+        SET amount = #{addCartDTO.amount}
+        WHERE user_id = #{userId}
+          AND menu_id = #{addCartDTO.menuId}
+    </update>
+
+    <select id="getCartList" resultMap="getCartLists" resultType="flab.delideli.dto.CartlistDTO">
+        SELECT carts.cart_id, carts.menu_id, menu_name, menu_price, amount
+        FROM carts,
+             menus
+        WHERE carts.user_id = #{userId}
+          AND menus.menu_id = carts.menu_id
+    </select>
+
+    <resultMap id="getCartLists" type="flab.delideli.dto.CartlistDTO">
+        <result column="cart_id" property="cartId"></result>
+        <result column="menu_id" property="menuId"></result>
+        <result column="menu_name" property="menuName"></result>
+        <result column="menu_price" property="price"></result>
+        <result column="amount" property="amount"></result>
+    </resultMap>
+
+    <select id="getCartItemAmountAndPrice" resultMap="getCartItemAmountAndPrice" resultType="flab.delideli.dto.CartItemDTO">
+        SELECT amount, menu_price
+        FROM carts RIGHT OUTER JOIN menus
+        ON carts.menu_id = menus.menu_id
+        WHERE carts.user_id = #{userId}
+    </select>
+
+    <resultMap id="getCartItemAmountAndPrice" type="flab.delideli.dto.CartItemDTO">
+        <result column="menu_price" property="itemPrice"></result>
+        <result column="amount" property="itemAmount"></result>
+    </resultMap>
+
+    <delete id="clearCart">
+        DELETE
+        FROM carts
+        WHERE user_id = #{userId}
+    </delete>
+  
+    <delete id="deleteCartItem">
+        DELETE FROM carts
+        WHERE cart_id = #{cartId}
+    </delete>
+
+    <select id="getCartOwnerId" resultType="string">
+        SELECT user_id
+        FROM carts
+        WHERE cart_id = #{cartId}
+    </select>
+
+</mapper>
