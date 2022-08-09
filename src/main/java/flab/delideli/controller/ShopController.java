@@ -27,8 +27,8 @@ public class ShopController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "가게 등록")
 	@UserAuthorization(role = UserLevel.OWNER)
-	public void addShop(@CurrentUser String ownerId, @RequestBody Shop shopDTO) {
-		shopService.addShop(ownerId, shopDTO);
+	public void addShop(@CurrentUser String ownerId, @RequestBody Shop shop) {
+		shopService.addShop(ownerId, shop);
 	}
 
 	@GetMapping()

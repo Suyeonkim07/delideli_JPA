@@ -1,6 +1,5 @@
 package flab.delideli.entity;
 
-import flab.delideli.entity.Shop;
 import flab.delideli.enums.FoodCategory;
 import flab.delideli.enums.MenuStock;
 
@@ -8,12 +7,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicUpdate
 @Entity
 @Table(name = "menus")
 public class Menu {
@@ -32,7 +33,7 @@ public class Menu {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "shop_id", insertable = false, updatable = false)
-	private Shop shopDTO;
+	private Shop shop;
 
 	@Column(name = "shop_id")
 	private Long shopId;

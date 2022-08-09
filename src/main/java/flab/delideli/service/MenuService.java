@@ -17,6 +17,7 @@ public class MenuService {
 
 	private final MenuRepository menuRepository;
 
+	@Transactional
 	public void saveMenu(Long shopId, Menu menuDTO) {
 		Optional<Menu> menus = menuRepository.findByShopIdAndMenuName(shopId, menuDTO.getMenuName());
 		if (menus.isPresent()) {
@@ -36,7 +37,7 @@ public class MenuService {
 	}
 
 	@Transactional
-	public void updateMenu(Long menuId, UpdateMenuDTO updateMenuDTO, Long shopId) {
+	public void updateMenu(Long menuId, UpdateMenuDTO updateMenuDTO) {
 		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> {
 			throw new IllegalArgumentException("변경할 메뉴가 없습니다.");
 		});
@@ -46,7 +47,6 @@ public class MenuService {
 		menu.setMenuInfo(updateMenuDTO.getMenuInfo());
 		menu.setMenuCategory(updateMenuDTO.getMenuCategory());
 		menu.setMenuActivation(updateMenuDTO.isMenuActivation());
-		menuRepository.save(menu);
 	}
 
 	@Transactional

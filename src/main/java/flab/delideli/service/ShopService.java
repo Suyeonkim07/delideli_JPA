@@ -18,21 +18,21 @@ public class ShopService {
 
 	private final ShopRepository shopRepository;
 
-	public void addShop(String ownerId, Shop shopDTO) {
-		Optional<Shop> shops = shopRepository.findByShopNameAndShopLocation(shopDTO.getShopName(), shopDTO.getShopLocation());
+	public void addShop(String ownerId, Shop shop) {
+		Optional<Shop> shops = shopRepository.findByShopNameAndShopLocation(shop.getShopName(), shop.getShopLocation());
 		if (shops.isPresent()) {
 			throw new AlreadyAddedValueException("해당 매장이름으로 이미 등록된 가게가 존재합니다.");
 		}
 		Shop insertShopDTO = Shop.builder()
-				.shopName(shopDTO.getShopName())
-				.shopTel(shopDTO.getShopTel())
-				.shopLocation(shopDTO.getShopLocation())
-				.shopInfo(shopDTO.getShopInfo())
-				.businessNum(shopDTO.getBusinessNum())
-				.deliveryArea(shopDTO.getDeliveryArea())
-				.foodCategory(shopDTO.getFoodCategory())
-				.notice(shopDTO.getNotice())
-				.operatingTime(shopDTO.getOperatingTime())
+				.shopName(shop.getShopName())
+				.shopTel(shop.getShopTel())
+				.shopLocation(shop.getShopLocation())
+				.shopInfo(shop.getShopInfo())
+				.businessNum(shop.getBusinessNum())
+				.deliveryArea(shop.getDeliveryArea())
+				.foodCategory(shop.getFoodCategory())
+				.notice(shop.getNotice())
+				.operatingTime(shop.getOperatingTime())
 				.ownerId(ownerId)
 				.build();
 		shopRepository.save(insertShopDTO);
